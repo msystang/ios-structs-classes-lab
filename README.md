@@ -16,7 +16,6 @@ class Giant {
 
 let fred = Giant()
 ```
-
 Will these three lines of code run? If not, why not?
 
 ```swift
@@ -27,6 +26,23 @@ fred.homePlanet = "Mars"
 
 Fix the class definition for `Giant` in the space below so that it **does** work:
 
+
+Answer:
+The code will not run because the property homePlanet was declared as a constant (let statement) and cannot be reassigned to "Mars". The property and the declared variable for the instance will need to be declared as a mutable variable (var) in order to be reassigned later on.
+
+```swift
+class Giant {
+var name: String = "Fred"
+var weight: Double = 340.0
+var homePlanet: String = "Earth"
+}
+
+var fred = Giant()
+
+fred.name = "Brick"
+fred.weight = 999.2
+fred.homePlanet = "Mars"
+```
 
 ## Question 2
 
@@ -51,6 +67,22 @@ bilbo.homePlanet = "Saturn"
 
 Change the declaration of `bilbo` so that the above three lines of code **do** work:
 
+Answer:
+```swift
+//Answer: The code will not run because bilbo was declared as a let statement, and to change the properties in an instance of a struct, the variable must be defined as a var statement as well.
+
+struct Alien {
+var name: String
+var height: Double
+var homePlanet: String
+}
+var bilbo = Alien(name: "Bilbo", height: 1.67, homePlanet: "Venus")
+
+bilbo.name = "Jake"
+bilbo.height = 1.42
+bilbo.homePlanet = "Saturn"
+```
+
 
 ## Question 3
 
@@ -65,6 +97,7 @@ jason.name = "Jason"
 
 What will the value of `edgar.name` be after those three lines of code are run? What will the value of `jason.name` be? Why?
 
+Answer: The value for jason.name will be "Jason" because the latest assignment of jason.name is as "Jason". Even though jason pulls properties from the class Giant whose initial value for property for name is (something), and then reassigned to "edgar", the final assignment to the property is "Jason". This is a value type.
 
 ## Question 4
 
@@ -79,7 +112,10 @@ charlesFromJupiter.homePlanet = "Jupiter"
 What will the value of `charles.homePlanet` be after the above code run? What about the value of `charlesFromJupiter.homePlanet`? Why?
 
 
-## Question 5
+Answer: The value of 'charles.homePlanet' after the above code would be "Pluto" and the value of 'charlesFromJupiter.homePlanet' would be "Jupiter". This is because charles.homePlanet is an instance where we assigned "Pluto" to the homePlanet property. Once we declared the variable 'charlesFromJupiter', we made a copy of the class Alien(), so that any instance we run of 'charlesFromJupiter' does not mutate variables stored in the property 'charles'. "Jupiter" is the assigned property for the instance 'charlesFromJupiter.homePlanet', and that is what will print after running that piece of code.
+
+
+## Question 5***
 
 Here's a struct that represents a bank account:
 
@@ -100,7 +136,25 @@ struct BankAccount {
 
 Does this code work? Why or why not?
 
+Answer: The code doesn't work because the functions within the struct are mutating but the instances the struct would create would not allow the properties to be mutated unless it is explicitly stated that the functions are mutating.
+
 Fix the `BankAccount` struct so it does work.
+
+Answer:
+```swift
+struct BankAccount {
+var owner: String
+var balance: Double
+
+mutating func deposit(_ amount: Double) {
+balance += amount
+}
+
+mutating func withdraw(_ amount: Double) {
+balance -= amount
+}
+}
+```
 
 Given the code below (which should incorporate any fixes you made):
 
@@ -112,14 +166,42 @@ joeAccount.withdraw(50.0)
 
 What will the value of `joeAccount.balance` be after the above code runs? What about the value of `joeOtherAccount.balance`? Why?
 
+Answer: 'joeAcocunt.balance' will have a value of '50.0' because in the instance 'BankAccount(owner: "Joe", balance: 100.0)', balance had an initial value of '100.0'. The instance joeAccount.withdraw(50.0) initiated the mutating function that subtracted '50.0' from the initial '100.0', resulting in the final balance of '50.0'. 'joeOtherAccount.balance' has a value of '100.0' because 'joeOtherAccount' was a copy of the initial instance of 'joeAccount', prior to any mutating functions were applied.
+
 
 ## Question 6
 
 a. Write a struct called `Person` that has 3 properties of type `String`: a first name, a last name and a middle name. Have the middle name be optional. Create 2 instances of a `Person`, one with a middle name and one without. Print one of their first names.
 
+Answer:
+```swift
+struct Person {
+var firstName: String
+var middleName: String?
+var lastName: String
+
+func getName() {
+if let middleName = middleName {
+print("\(firstName) \(middleName) \(lastName)")
+} else {
+print("\(firstName) \(lastName)")
+}
+}
+}
+
+Person(firstName: "Bob", middleName: "Rob", lastName: "Robertson")
+Person(firstName: "Dill", middleName: nil, lastName: "Pickles")
+
+print(Person(firstName: "Dill", middleName: nil, lastName: "Pickles").firstName)
+```
 
 b. Write a method in `Person` called `fullName` that will return a formatted string of an instance's full name. Call this method on both the instances you created in part a.
 
+Answer:
+```swift
+let myName = Person(firstName: "Sunni" , middleName: nil, lastName: "Tang")
+myName.getName()
+```
 
 ## Question 7
 
@@ -128,13 +210,99 @@ a. Create a struct called `Book` that has properties `title`, `author` and `rati
 
 b. Add a method to `Book` called `isGood` that returns `true` if its rating is greater than or equal to 7
 
+Answer:
+```swift
+struct Book {
+var title: String
+var author: String
+var rating: Double
+
+func isGood() -> Bool {
+if rating >= 7.0 {
+return true
+} else {
+return false
+}
+}
+}
+
+let hpGOF = Book(title: "Harry Potter and the Goblet of Fire", author: "JK Rowling", rating: 9.4)
+let goodOmens = Book(title: "Good Omens", author: "Neil Gaiman & Terry Pratchett", rating: 9.2)
+let hobbit = Book(title: "Fahrenheit 451 ", author: "Ray Bradbury", rating: 8.8)
+let someBadBook = Book(title: "Offensive Title", author: "Author Who Didn't Try", rating: 4.3)
+
+print(hpGOF.isGood())
+print(goodOmens.isGood())
+print(hobbit.isGood())
+print(someBadBook.isGood())
+```
 
 ## Question 8
 
+Answer: 
 ```swift
 class Dog {
+var name: String = "dog"
+var breed: String = "unknown"
+var mood: String = "calm"
+var hungry: Bool = false
 
+func playFetch() {
+mood = "playful"
+hungry = true
+print("Ruff!")
 }
+
+func feed() {
+if hungry == true {
+hungry = false
+print("Woof!")
+} else {
+print("The dog doesn't look hungry")
+}
+}
+
+func toString() -> String {
+let string = "Name: \(name) \nBreed: \(breed) \nMood: \(mood)"
+return string
+}
+}
+
+var dog1 = Dog()
+dog1.name //returns "dog"
+dog1.breed //returns "unknown"
+dog1.mood //returns "calm"
+dog1.hungry //returns false
+
+var dog2 = Dog()
+dog2.name = "Rhett"
+dog2.breed = "English Setter"
+dog2.mood = "excited"
+dog2.hungry = false
+
+dog2.playFetch() //prints "Ruff!"
+dog2.hungry //returns true
+dog2.mood //returns "playful"
+
+var dog3 = Dog()
+dog3.name = "Partner"
+dog3.breed = "Golden Retriever"
+dog3.mood = "thoughtful"
+dog3.hungry = true
+
+dog3.feed() //prints "Woof!"
+dog3.hungry //returns false
+
+var dog4 = Dog()
+dog4.name = "Rascal"
+dog4.breed = "Golden Retriever"
+dog4.mood = "feeling pawesome"
+dog4.hungry = true
+print(dog4.toString())
+//prints:
+//Name: Rascal
+//Breed: Golden Retriever
+//Mood: feeling pawesome
 ```
 
 Work through the following tasks one by one, in order. Each time, add to the `Dog` class above. Each task has sample output that you should be able to replicate when you are done.
@@ -233,6 +401,34 @@ let colorDictArray: [[String: Double]] = [["red": 1.0, "green": 0.0, "blue": 0.0
  ["red": 0.6, "green": 0.9, "blue": 0.0],
  ["red": 0.2, "green": 0.2, "blue": 0.5],
  ["red": 0.5, "green": 0.1, "blue": 0.9],]
+```
+Answer:
+```swift
+let colorDictArray: [[String: Double]] = [["red": 1.0, "green": 0.0, "blue": 0.0],
+["red": 0.0, "green": 1.0, "blue": 0.0],
+["red": 0.0, "green": 0.0, "blue": 1.0],
+["red": 0.6, "green": 0.9, "blue": 0.0],
+["red": 0.2, "green": 0.2, "blue": 0.5],
+["red": 0.5, "green": 0.1, "blue": 0.9],]
+//```
+//
+
+struct RGBColor {
+var red: Double
+var green: Double
+var blue: Double
+
+}
+
+var rgbArray = [RGBColor]()
+
+for dict in colorDictArray {
+rgbArray.append(RGBColor(red: dict["red"]!, green: dict["green"]!, blue: dict["blue"]!))
+}
+
+for i in rgbArray {
+print("Red: \(i.red), Green: \(i.green), Blue: \(i.blue)")
+}
 ```
 
 
