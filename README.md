@@ -375,6 +375,14 @@ K = C + 273
 
 a. Make a struct called `FreezingPoint` that has three static properties: `celsius`, `fahrenheit`, and `kelvin`. Give them all values equal to the freezing point of water.
 
+Answer:
+```swift
+struct FreezingPoint {
+let celsius = 0.0
+let fahrenheit = 32.0
+let kelvin = 273.0
+}
+```
 
 b. Make a struct called `Celsius` that has one property: `celsius`, and two methods `getFahrenheitTemp`, and `getKelvinTemp`. Make the values of `fahrenheit` and `kelvin` correct values, converted from the `celsius` property.
 
@@ -386,6 +394,32 @@ tenDegreesCelsius.getFahrenheitTemp() //returns 50.0
 ```
 
 c. Give the `Celsius` struct a method called `isBelowFreezing` that returns a `Bool` (true if the temperature is below freezing).
+
+Answer for b & c:
+```swift
+
+var celsius = Double()
+
+func getFahrenheitTemp() -> Double {
+let fahrenheit = 1.8*celsius + 32.0
+return fahrenheit
+}
+
+func getKelvinTemp() -> Double {
+let kelvin = celsius+273.0
+return kelvin
+}
+
+func isBelowFreezing() -> Bool {
+if celsius < 0.0 {
+return true
+} else {
+return false
+}
+}
+}
+
+```
 
 
 ## Question 10
@@ -440,6 +474,27 @@ b. Create an instance method inside `Movie` called `blurb` that returns a format
 
 Ex: "Borat came out in 2006. It was an odd film starring Sacha Baron Cohen as a man named Borat who was visiting America from Kazakhstan."
 
+Answer:
+```swift
+
+struct Movie {
+var name = String()
+var year = Int()
+var genre = String()
+var cast = [String]()
+var description = String()
+
+func blurb() -> String {
+let blurb = "\(name) is a new film starring \(cast) and hits the ball out of the court with Chinese representation and cultural exploration of Chinese-American identity and culture. \(cast[0]) plays the main character Billi in the \(year) \(genre). \(description) The movie has since made more money per theater than Avengers Endgame."
+return blurb
+}
+
+}
+
+let lastMovieISaw = Movie(name: "The Farewell", year: 2019, genre: "Drama/Comedy", cast: ["Akwafina", "Tzi Ma", "Zhao Shuzhen", "Diana Lin", "Yongbo Jiang", "Aoi Mizuhara"], description: "Billi's family returns to China under the guise of a fake wedding to stealthily say goodbye to their beloved matriarch -- the only person who doesn't know she only has a few weeks to live.")
+
+print(lastMovieISaw.blurb())
+```
 
 ## Question 12
 
@@ -478,6 +533,40 @@ if let yearAsString = dieHardDict["year"] as? String {
  print(yearAsString)
 } else {
  print("this didn't work")
+}
+```
+Answer: 
+```swift
+func makeMovie(_ dict: [String: Any]) -> Movie?  {
+for (key, value) in dieHardDict {
+
+if key == "name" {
+if let nameAsString = value as? String {
+lastMovieISaw.name = nameAsString
+}
+
+} else if key == "year" {
+if let yearAsString = value as? Int {
+lastMovieISaw.year = yearAsString
+}
+
+} else if key == "genre" {
+if let genreAsString = value as? String {
+lastMovieISaw.genre = genreAsString
+}
+
+} else if key == "cast" {
+if let castAsString = value as? [String] {
+lastMovieISaw.cast = castAsString
+}
+
+} else {
+if let descAsString = value as? String {
+lastMovieISaw.description = descAsString
+}
+}
+}
+return lastMovieISaw
 }
 ```
 
@@ -554,4 +643,17 @@ var movies: [[String:Any]] = [
  "description": "Navy S.E.A.L. sniper Chris Kyle\"s pinpoint accuracy saves countless lives on the battlefield and turns him into a legend. Back home to his wife and kids after four tours of duty, however, Chris finds that it is the war he can\"t leave behind."
  ]
 ]
+```
+
+Answer:
+```swift
+var arrayOfMovie = [Movie]()
+
+for dict in movies {
+if let dictMovieUnwrapped = makeMovie(dict) {
+arrayOfMovie.append(dictMovieUnwrapped)
+}
+}
+
+print(arrayOfMovie)
 ```
